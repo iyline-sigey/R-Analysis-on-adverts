@@ -1,0 +1,336 @@
+---
+title: "IP WEEK 12"
+author: "IYLINE CHUMO"
+date: "26/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Defining The Question
+
+To identify which individuals are most likely to click on an online cryptography course advert.
+
+## Metric of Success
+
+Our project will be considered successful if we are able to effectively perform EDA to determine the individuals who are most likely to click the ads.
+
+
+## Understanding the context
+A Kenyan entrepreneur has created an online cryptography course and would want to advertise it on her blog. She currently targets audiences originating from various countries. In the past, she ran ads to advertise a related course on the same blog and collected data in the process. She would now like to employ our services as Data Scientists Consultants identify which individuals are most likely to click on her ads. 
+
+
+
+## Experimental Design
+
+* Loading the dataset
+* Performing data cleaning
+* Exploratory Data Analysis
+* Conclusion and recommendation
+
+## Loading the Dataset
+
+```{r}
+data <- read.csv('http://bit.ly/IPAdvertisingData')
+```
+```{r}
+head(data)
+```
+```{r}
+tail(data)
+```
+## Cleaning Data
+
+## Finding the total missing values in our dataset.
+
+```{r}
+colSums(is.na(data))
+```
+there are no missing values in our dataset
+
+##Checking for duplicates across our rows.
+
+```{r}
+data[duplicated(data),]
+```
+
+there are no duplicated values in our dataset
+
+## Exploring the dataset
+#Checking the descriptive statistics of our dataset
+```{r}
+summary(data)
+```
+##Checking the structure of our dataframe
+```{r}
+str(data)
+```
+
+##checking for outliers
+plotting the boxplots to to check the data distribution in the numeric columns
+
+```{r}
+boxplot(data$Area.Income,
+        main ="Area Income",
+        col = "orange",
+        border  = 'brown',
+        horizontal = TRUE,
+        notch = TRUE)
+```
+There are a few outliers in the area.income column
+
+```{r}
+boxplot(data$Daily.Time.Spent.on.Site,
+        main ="Daily Time Spent on Site",
+        col = "orange",
+        border  = 'brown',
+        horizontal = TRUE,
+        notch = TRUE)
+```
+There are no outliers in time spent on site column.
+
+```{r}
+boxplot(data$Age,
+        main ="Age",
+        col = "orange",
+        border  = 'brown',
+        horizontal = TRUE,
+        notch = TRUE)
+```
+There are no outliers in the age column
+
+```{r}
+boxplot(data$Daily.Internet.Usage,
+        main ="Daily Internet Usage",
+        col = "orange",
+        border  = 'brown',
+        horizontal = TRUE,
+        notch = TRUE)
+#There are no outliers in the daily internet usage column
+```
+## Exploratory Data Analysis
+
+### Univariate Analysis 
+
+#### Measures of Central Tendency
+
+#Finding the mean of our numeric columns
+```{r}
+colMeans(data[sapply(data,is.numeric)])
+```
+#Finding the median of our numeric columns
+```{r}
+ad_time_median <- median(data$Daily.Time.Spent.on.Site)
+print(ad_time_median)
+```
+```{r}
+ad_age_median <- median(data$Age)
+ad_age_median
+```
+```{r}
+ad_income_median <- median(data$Area.Income)
+ad_income_median
+```
+```{r}
+ad_internet_usage_median <- median(data$Daily.Internet.Usage)
+ad_internet_usage_median
+```
+
+Finding the mode of our numeric columns.
+creating the mode function
+```{r}
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]}
+```
+
+```{r}
+getmode(data$Age)
+getmode(data$Daily.Time.Spent.on.Site)
+getmode(data$Area.Income)
+getmode(data$Daily.Internet.Usage)
+getmode(data$City)
+getmode(data$Ad.Topic.Line)
+getmode(data$Male)
+getmode(data$Country)
+getmode(data$Timestamp)
+```
+finding the minimum values in the numeric columns
+```{r}
+min(data$Age)
+min(data$Daily.Time.Spent.on.Site)
+min(data$Area.Income)
+min(data$Daily.Internet.Usage)
+```
+Finding the maximum values in the numeric columns
+
+```{r}
+max(data$Age)
+max(data$Daily.Time.Spent.on.Site)
+max(data$Area.Income)
+max(data$Daily.Internet.Usage)
+```
+Finding the range in the numeric columns
+```{r}
+range(data$Age)
+range(data$Daily.Time.Spent.on.Site)
+range(data$Area.Income)
+range(data$Daily.Internet.Usage)
+```
+* The youngest respondent is 19 and the oldest 61 years of age.
+* The least time spent on her site is 32 minutes and the highest 91 minutes.
+* The lowest income earner among the respondents earns 13,996 while the highest earns 79,484.
+* Daily internet usage ranges from 105 - 270
+
+#finding the stardard deviations of the columns
+
+```{r}
+sd(data$Age)
+sd(data$Daily.Time.Spent.on.Site)
+sd(data$Area.Income)
+sd(data$Daily.Internet.Usage)
+```
+#getting the quantiles in our columns
+
+```{r}
+quantile(data$Age)
+quantile(data$Daily.Time.Spent.on.Site)
+quantile(data$Area.Income)
+quantile(data$Daily.Internet.Usage)
+```
+#### Frequency Distribution
+
+Finding the frequency distribution in the age column
+
+```{r}
+table(data$Age)
+```
+```{r}
+summary(data)
+```
+
+
+# Most respondents fall between the age bracket of 24-40years. The age with the highest number of readers is 31 which has a total of 60 people in total.
+
+#### Histogram
+
+```{r}
+hist(data$Age, col  = "Cyan")
+```
+#Most respondents fall in the age bracket of 25-40yrs.
+
+```{r}
+hist(data$Area.Income, col = "Purple")
+```
+#Majority of the respondents earn between 50K - 70K
+
+```{r}
+hist(data$Daily.Time.Spent.on.Site, col = "orangered")
+```
+```{r}
+hist(data$Daily.Internet.Usage, col = "pink")
+```
+### Bivariate Analysis
+
+#### Covariance
+
+```{r}
+cov(data$Age, data$Daily.Time.Spent.on.Site)
+```
+#There is a negative relationship between the age and the time spent on site which means as the age increases, the daily time spent on the site decreases.
+```
+```
+```{r}
+cov(data$Age, data$Daily.Internet.Usage)
+```
+
+#There is a negative relationship between the age and the daily internet usage as well.
+
+```{r}
+cov(data$Area.Income,data$Daily.Time.Spent.on.Site)
+```
+#There is a strong positive relationship between the income and daily time spent on site variables. This means the higher the income, the more the time spent on site and the lower the income, the less the time spent on site.
+
+```{r}
+cov(data$Age,data$Area.Income)
+```
+#There is a negative correlation between the age and income variables.
+
+#### Correlation matrix
+
+```{r}
+cor(data$Age, data$Daily.Time.Spent.on.Site)
+cor(data$Age,data$Daily.Internet.Usage)
+cor(data$Area.Income,data$Daily.Internet.Usage)
+cor(data$Area.Income,data$Daily.Time.Spent.on.Site)
+cor(data$Age,data$Area.Income)
+```
+```{r}
+cor(data[, c("Age","Daily.Time.Spent.on.Site","Daily.Internet.Usage")])
+```
+```{r}
+cor(data[,unlist(lapply(data, is.numeric))])
+```
+##There are negative correlations between the following variables 1.Area Income and Daily Time Spent on Site 2.Male and Daily Time Spent on Site 3.Clicking on the Advert and Daily Time Spent on Site. 4.Area Income and Age 5.Daily Internet Usage and Age 6.Male and Age 7.Area Income and Age 8.Area Income and Clicking on the Advert 9.Daily Internet usage and Clicking on the advert. 10.Male and Clicking on the Advert
+
+##There are positive Correlations between the following variables: 1.Age and Clicking on the advert 2.Male and Daily Internet Usage 3.Male and Area Income 4.Daily Time Spent on Site and Daily Internet Usage. 5.Area Income and Daily Time Spent on Site 6.Area Income and Daily Internet Usage 7.Area Income and Male 8.Age and Clicking on the Advert.
+
+
+
+#### Scatter Plots
+
+A scatter plot for age and daily time spent on site.
+
+```{r}
+plot(data$Age,data$Daily.Time.Spent.on.Site, xlab = "Age Distribution",
+     ylab = "Time Spent on Site", col="orangered")
+```
+
+Scatter plot for Income Distribution and Daily time spent on site.
+
+```{r}
+plot(data$Area.Income,data$Daily.Time.Spent.on.Site, xlab= "Income Distribution", ylab = "Time spent on site", col="orangered")
+```
+```{r}
+plot(data$Area.Income,data$Daily.Time.Spent.on.Site, xlab= "Income Distribution", ylab = "Time spent on site", col="orangered")
+```
+Scatter plot for Age and Income Distribution
+
+```{r}
+plot(data$Age,data$Area.Income, xlab = "Age", ylab ="Income Distribution", col="orangered")
+```
+##Conclusion
+
+
+After our analysis, we conclude that the following insights would help identify an individual who is likely to click on the ad:
+
+1. Daily Time Spent on Site-the higher the time the lower the chances of clicking.
+
+2.  Age-The higher the Age the Higher the chance of clicking on the ads
+
+3. Area Income-The higher the income the higher the chances of clicking on the ad
+
+3.  Internet Usage-The lower the Internet Usage the higher the chances of clicking the ad.
+
+
+## Recommendations
+
+* Since the data shows that most of the respondents fall in the age bracket 25-41, she should tailor make the course to attract or suit more people in that age bracket.  
+* Our client should target people with an income of 50,000 to 70,000 since those are the ones who seem interested and are in a position to afford the course.
+* Most people spent about 70-85 minutes on the site so she should ensure that her course takes about 90mns or less per day so as to keep people interested.
+
+## Follow up questions
+
+### Did we have the right data?
+
+Yes
+
+### Do we need other data to answer our question?
+
+No
+
+### Did we have the right question?
+
+Yes
